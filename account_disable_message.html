@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Account Disabled</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: linear-gradient(135deg, #f0f2f5, #dfe9f3);
+      --primary: #e74c3c;
+      --primary-dark: #c0392b;
+      --text: #1e1e1e;
+      --card-bg: #ffffff;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body {
+      font-family: 'Inter', sans-serif;
+      height: 100%;
+      background: var(--bg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .container {
+      max-width: 480px;
+      background: var(--card-bg);
+      padding: 50px 40px;
+      border-radius: 20px;
+      box-shadow: 0 12px 35px rgba(0, 0, 0, 0.1);
+      text-align: center;
+      animation: fadeIn 0.8s ease-in-out;
+      position: relative;
+      z-index: 10;
+    }
+
+    .container img {
+      width: 100px;
+      margin-bottom: 25px;
+      animation: bounce 1.5s infinite;
+    }
+
+    h1 {
+      font-size: 26px;
+      color: var(--primary);
+      margin-bottom: 16px;
+    }
+
+    p {
+      font-size: 16px;
+      color: var(--text);
+      margin-bottom: 30px;
+    }
+
+    button.contact {
+      padding: 12px 25px;
+      border: none;
+      background-color: var(--primary);
+      color: #fff;
+      font-size: 16px;
+      font-weight: 600;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+
+    button.contact:hover {
+      background-color: var(--primary-dark);
+      transform: scale(1.03);
+    }
+
+    .footer {
+      margin-top: 20px;
+      font-size: 13px;
+      color: #999;
+    }
+
+    .footer a {
+      color: var(--primary);
+      text-decoration: none;
+    }
+
+    .footer a:hover {
+      text-decoration: underline;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes bounce {
+      0%, 100% {
+        transform: translateY(0);
+      }
+      50% {
+        transform: translateY(-8px);
+      }
+    }
+
+    /* Loading Spinner */
+    #loader {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background: var(--bg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+    }
+
+    .spinner {
+      border: 6px solid #f3f3f3;
+      border-top: 6px solid var(--primary);
+      border-radius: 50%;
+      width: 60px;
+      height: 60px;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    @media (max-width: 500px) {
+      .container {
+        padding: 40px 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Loader -->
+  <div id="loader">
+    <div class="spinner"></div>
+  </div>
+
+  <!-- Main Card -->
+  <div class="container">
+    <img src="https://cdn-icons-png.flaticon.com/512/463/463612.png" alt="Warning Icon">
+    <h1>Account Disabled</h1>
+    <p>Your account is <strong>currently disabled</strong> and access is restricted. <br>
+    Please contact the system administrator to restore access or resolve the issue.</p>
+    <button class="contact" onclick="window.location.href='mailto:johnlloyd.milanay@cbsua.edu.ph'">Contact Admin</button>
+    <div class="footer">
+      Not you? <a href="login.php">Log in as another user</a>
+    </div>
+  </div>
+
+  <script>
+    // Simulate loading
+    window.addEventListener("load", () => {
+      const loader = document.getElementById("loader");
+      setTimeout(() => {
+        loader.style.display = "none";
+      }, 1200);
+    });
+  </script>
+</body>
+</html>
