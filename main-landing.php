@@ -943,8 +943,8 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 </script>
 
-    <!-- Gallery Section -->
-    <section id="gallery" class="section">
+<!-- Gallery Section -->
+<section id="gallery" class="section">
     <div class="container">
         <h2 class="section-title text-center">Gallery</h2>
         <p class="section-subtitle text-center">
@@ -959,11 +959,11 @@ document.addEventListener('DOMContentLoaded', function () {
                                    ORDER BY gallery_date DESC 
                                    LIMIT 8");
             while ($row = $result->fetch_assoc()) {
-                $image_path = ltrim($row['gallery_image_url'], './');
+                $media_path = ltrim($row['gallery_image_url'], './');
                 $media_tag = ($row['gallery_type'] == 'image') 
-                    ? '<img src="'.$image_path.'" class="card-img-top gallery-clickable" data-type="image" data-src="'.$image_path.'" alt="'.htmlspecialchars($row['gallery_caption']).'">'
-                    : '<video class="card-img-top gallery-clickable" muted data-type="video" data-src="'.$image_path.'">
-                        <source src="'.$image_path.'" type="video/mp4">
+                    ? '<img src="'.$media_path.'" class="card-img-top gallery-clickable" data-type="image" data-src="'.$media_path.'" alt="'.htmlspecialchars($row['gallery_caption']).'">'
+                    : '<video class="card-img-top gallery-clickable" muted data-type="video" data-src="'.$media_path.'">
+                        <source src="'.$media_path.'" type="video/mp4">
                        </video>';
 
                 echo '

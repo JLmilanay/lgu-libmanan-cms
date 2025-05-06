@@ -52,7 +52,7 @@ if (!isset($GLOBALS['announcement_modal_loaded'])) {
       }
       /* Hide scrollbar for cleaner look */
       .announcements-scroll-container::-webkit-scrollbar {
-        display: none;
+        display: block;
       }
 
       /* Elegant card design */
@@ -375,10 +375,22 @@ $result = $conn->query($query);
 <section id="announcements">
   <div class="announcements-container">
     <!-- Section Heading and Description -->
-    <header class="announcements-header">
-      <h2>Announcements</h2>
-      <p>Stay informed with our latest updates and news</p>
-    </header>
+    <!-- About Title and Description -->
+    <div class="text-center mt-4">
+      <h4>
+        <?php 
+          if (!empty($section['title'])) {
+              echo htmlspecialchars($section['title'], ENT_QUOTES, 'UTF-8');
+          } else {
+              echo '<strong style="font-size: 2em; font-weight: bold;">ANNOUNCEMENTS</strong>';
+          }
+        ?>
+      </h4>
+      <hr>
+      <p class="lead">
+        Stay informed with the latest update and news.
+      </p>
+    </div>
 
     <!-- Announcements Cards Container -->
     <div class="announcements-scroll-container">

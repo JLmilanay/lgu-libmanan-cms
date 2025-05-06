@@ -1,0 +1,40 @@
+   /* Portrait Orientation Enhancements for Video Modal */
+@media (orientation: portrait) {
+  #galleryModal .modal-dialog {
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
+    padding: 0;
+  }
+  #galleryModal .modal-content {
+    border-radius: 0;
+    height: 200vh;
+    max-height: 200vh;
+    overflow-y: scroll;
+  }
+  #galleryModal .modal-body {
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+  }
+  #modalMediaContainer {
+    width: 100%;
+    height: 100%;
+  }
+}
+@media (max-width: 576px) {
+    #galleryModal .modal-dialog {
+      width: 100%;
+      max-width: 100%;
+      margin: 0;
+      padding: 0;
+    }
+    #galleryModal .modal-content {
+      height: 100vh;
+      max-height: 100vh;
+    }
+  }
+  

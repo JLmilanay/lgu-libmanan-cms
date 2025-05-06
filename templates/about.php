@@ -34,9 +34,17 @@ if (isset($section['id'])) {
       </div>
     </div>
     
-    <!-- About Title and Description -->
+   <!-- About Title and Description -->
     <div class="text-center mt-4">
-      <h4>ABOUT <?php echo htmlspecialchars($office['office_name'], ENT_QUOTES, 'UTF-8'); ?></h4>
+      <h4>
+        <?php 
+          if (!empty($section['title'])) {
+              echo htmlspecialchars($section['title'], ENT_QUOTES, 'UTF-8');
+          } else {
+              echo '<strong style="font-size: 2em; font-weight: bold;">ABOUT</strong>';
+          }
+        ?>
+      </h4>
       <hr>
       <p class="lead">
         Welcome to the <?php echo htmlspecialchars($office['office_name'], ENT_QUOTES, 'UTF-8'); ?>! Here you can learn more about our mission, vision, and the services we offer.
@@ -96,30 +104,35 @@ if (isset($section['id'])) {
     
                 <!-- Modal -->
                 <div class="modal fade" id="imageModal-<?php echo htmlspecialchars($about['id'], ENT_QUOTES, 'UTF-8'); ?>" tabindex="-1" role="dialog" aria-labelledby="imageModalLabel-<?php echo htmlspecialchars($about['id'], ENT_QUOTES, 'UTF-8'); ?>" aria-hidden="true">
-                  <div class="modal-dialog modal-dialog-centered modal-sm" role="document">
+                  <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
                     <div class="modal-content">
                       <div class="modal-header">
+                      <div class="w-100 text-center">
                         <h5 class="modal-title" id="imageModalLabel-<?php echo htmlspecialchars($about['id'], ENT_QUOTES, 'UTF-8'); ?>">
                           <?php echo htmlspecialchars($about['title'], ENT_QUOTES, 'UTF-8'); ?>
                         </h5>
+                      </div>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                           <span aria-hidden="true">&times;</span>
                         </button>
                       </div>
-                      <div class="modal-body text-center">
+                      <div class="modal-body text-center p-0 position-relative">
                         <img src="<?php echo htmlspecialchars($about['image_path'], ENT_QUOTES, 'UTF-8'); ?>"
-                             alt="About Image"
-                             class="img-fluid"
-                             id="modalImage-<?php echo htmlspecialchars($about['id'], ENT_QUOTES, 'UTF-8'); ?>"
-                             onclick="openFullScreen(this)"
-                             data-toggle="tooltip"
-                             data-placement="top"
-                             title="Click to view fullscreen">
-                        <p class="mt-3">
-                          <?php echo nl2br(htmlspecialchars($about['content'], ENT_QUOTES, 'UTF-8')); ?>
-                        </p>
+                            alt="About Image"
+                            class="img-fluid w-100"
+                            style="object-fit: contain;"
+                            id="modalImage-<?php echo htmlspecialchars($about['id'], ENT_QUOTES, 'UTF-8'); ?>"
+                            onclick="openFullScreen(this)"
+                            data-toggle="tooltip"
+                            data-placement="top"
+                            title="Click to view fullscreen">
+
+                        <div class="position-absolute bottom-0 w-100 text-black py-2 px-3">
+                          <p class="mb-0 text-center">
+                            <?php echo nl2br(htmlspecialchars($about['content'], ENT_QUOTES, 'UTF-8')); ?>
+                          </p>
+                        </div>
                       </div>
-                    </div>
                   </div>
                 </div>
               <?php endif;

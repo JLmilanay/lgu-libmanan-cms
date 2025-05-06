@@ -3,9 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Account Disabled</title>
+  <title>Account Pending/Disabled</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-
   <style>
     :root {
       --bg: linear-gradient(135deg, #f0f2f5, #dfe9f3);
@@ -13,14 +12,15 @@
       --primary-dark: #c0392b;
       --text: #1e1e1e;
       --card-bg: #ffffff;
+      --shadow: 0 12px 35px rgba(0, 0, 0, 0.15);
     }
-
+    
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
     }
-
+    
     html, body {
       font-family: 'Inter', sans-serif;
       height: 100%;
@@ -28,38 +28,88 @@
       display: flex;
       align-items: center;
       justify-content: center;
+      overflow: hidden;
     }
-
+    
     .container {
       max-width: 480px;
+      width: 90%;
       background: var(--card-bg);
       padding: 50px 40px;
       border-radius: 20px;
-      box-shadow: 0 12px 35px rgba(0, 0, 0, 0.1);
+      box-shadow: var(--shadow);
       text-align: center;
       animation: fadeIn 0.8s ease-in-out;
       position: relative;
       z-index: 10;
     }
-
-    .container img {
+    
+    /* Composite Icon Container */
+    .icon-stack {
+      position: relative;
       width: 100px;
-      margin-bottom: 25px;
-      animation: bounce 1.5s infinite;
+      height: 100px;
+      margin: 0 auto 25px;
+      transition: transform 0.3s ease;
     }
-
+    
+    .icon-stack:hover {
+      transform: scale(1.05);
+    }
+    
+    /* Base icon: Account icon fills the container */
+    .icon-stack .icon-base {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+    
+    /* Overlay icon: Clock icon, positioned at the top left, replacing any star icon */
+    .icon-stack .icon-clock {
+      position: absolute;
+      top: -5px;
+      left: -5px;
+      width: 30px;
+      height: 30px;
+      object-fit: contain;
+      background: var(--bg);
+      border: 2px solid var(--card-bg);
+      border-radius: 50%;
+      padding: 2px;
+      animation: pulse 2s infinite;
+    }
+    
+    /* Overlay icon: X icon, positioned at bottom right with a subtle shake */
+    .icon-stack .icon-x {
+      position: absolute;
+      bottom: -5px;
+      right: -5px;
+      width: 30px;
+      height: 30px;
+      object-fit: contain;
+      background: var(--bg);
+      border: 2px solid var(--card-bg);
+      border-radius: 50%;
+      padding: 2px;
+      animation: shake 3s infinite;
+    }
+    
     h1 {
       font-size: 26px;
       color: var(--primary);
       margin-bottom: 16px;
     }
-
+    
     p {
       font-size: 16px;
       color: var(--text);
       margin-bottom: 30px;
+      line-height: 1.5;
     }
-
+    
     button.contact {
       padding: 12px 25px;
       border: none;
@@ -71,50 +121,52 @@
       cursor: pointer;
       transition: background-color 0.3s ease, transform 0.2s ease;
     }
-
+    
     button.contact:hover {
       background-color: var(--primary-dark);
       transform: scale(1.03);
     }
-
+    
     .footer {
       margin-top: 20px;
       font-size: 13px;
       color: #999;
     }
-
+    
     .footer a {
       color: var(--primary);
       text-decoration: none;
+      transition: text-decoration 0.3s;
     }
-
+    
     .footer a:hover {
       text-decoration: underline;
     }
-
+    
     @keyframes fadeIn {
-      from {
-        opacity: 0;
-        transform: translateY(20px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
     }
-
-    @keyframes bounce {
-      0%, 100% {
-        transform: translateY(0);
-      }
-      50% {
-        transform: translateY(-8px);
-      }
+    
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+      100% { transform: scale(1); }
     }
-
-    /* Loading Spinner */
+    
+    @keyframes shake {
+      0% { transform: translateX(0); }
+      25% { transform: translateX(-2px); }
+      50% { transform: translateX(2px); }
+      75% { transform: translateX(-2px); }
+      100% { transform: translateX(0); }
+    }
+    
+    /* Loader Styles */
     #loader {
       position: absolute;
+      top: 0;
+      left: 0;
       width: 100%;
       height: 100%;
       background: var(--bg);
@@ -123,7 +175,7 @@
       justify-content: center;
       z-index: 100;
     }
-
+    
     .spinner {
       border: 6px solid #f3f3f3;
       border-top: 6px solid var(--primary);
@@ -132,46 +184,62 @@
       height: 60px;
       animation: spin 1s linear infinite;
     }
-
+    
     @keyframes spin {
-      to {
-        transform: rotate(360deg);
-      }
+      to { transform: rotate(360deg); }
     }
-
+    
     @media (max-width: 500px) {
       .container {
         padding: 40px 20px;
+      }
+      .icon-stack {
+        width: 80px;
+        height: 80px;
+      }
+      .icon-stack .icon-clock,
+      .icon-stack .icon-x {
+        width: 25px;
+        height: 25px;
       }
     }
   </style>
 </head>
 <body>
-
   <!-- Loader -->
-  <div id="loader">
+  <div id="loader" role="status" aria-label="Loading">
     <div class="spinner"></div>
   </div>
-
+  
   <!-- Main Card -->
   <div class="container">
-    <img src="https://cdn-icons-png.flaticon.com/512/463/463612.png" alt="Warning Icon">
-    <h1>Account Disabled</h1>
-    <p>Your account is <strong>currently disabled</strong> and access is restricted. <br>
-    Please contact the system administrator to restore access or resolve the issue.</p>
-    <button class="contact" onclick="window.location.href='mailto:johnlloyd.milanay@cbsua.edu.ph'">Contact Admin</button>
+    <!-- Composite Icon: Account Icon Base with Clock (overlay) and X (overlay) -->
+    <div class="icon-stack">
+      <!-- Base: Account Icon -->
+      <img src="https://cdn-icons-png.flaticon.com/512/149/149071.png" alt="Account Icon" class="icon-base">
+      <!-- Overlay: Clock Icon (indicating pending) -->
+      <img src="https://cdn-icons-png.flaticon.com/512/1828/1828884.png" alt="Clock Icon" class="icon-clock">
+      <!-- Overlay: X Icon (indicating disabled) -->
+      <img src="https://cdn-icons-png.flaticon.com/512/1828/1828778.png" alt="Disabled Icon" class="icon-x">
+    </div>
+    <h1>Account Pending/Disabled</h1>
+    <p>
+      Your account is either pending approval or has been disabled, and access is restricted.<br>
+      Please contact the system administrator to resolve the issue.
+    </p>
+    <button class="contact" onclick="window.location.href='mailto:johnlloyd.milanay@cbsua.edu.ph?subject=Account%20Assistance'">
+      Contact Admin
+    </button>
     <div class="footer">
       Not you? <a href="login.php">Log in as another user</a>
     </div>
   </div>
-
+  
   <script>
-    // Simulate loading
+    // Hide the loader after a short delay once the page loads.
     window.addEventListener("load", () => {
       const loader = document.getElementById("loader");
-      setTimeout(() => {
-        loader.style.display = "none";
-      }, 1200);
+      setTimeout(() => { loader.style.display = "none"; }, 1200);
     });
   </script>
 </body>

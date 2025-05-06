@@ -39,12 +39,23 @@ $admin_mode = (isset($_GET['admin']) && $_GET['admin'] == 1);
       <?php } ?>
     </div>
     <!-- Center-aligned description with office name -->
-    <h2 class="section-title align-items-center">Our Services</h2>
-    <hr>
-    <p class="office-description">
-      At <?php echo htmlspecialchars($office['office_name']); ?>, we are committed to providing high-quality services to meet the needs of our community.
-      Our team ensures efficient and reliable assistance in various areas to serve the public with professionalism and excellence.
-    </p>
+    <div class="text-center mt-4">
+      <h4>
+        <?php 
+          if (!empty($section['title'])) {
+              echo htmlspecialchars($section['title'], ENT_QUOTES, 'UTF-8');
+          } else {
+              echo '<strong style="font-size: 2em; font-weight: bold;"> OUR SERVICES </strong>';
+          }
+        ?>
+      </h4>
+      <hr>
+      <p class="lead">
+          At <?php echo htmlspecialchars($office['office_name']); ?>, we are committed to providing high-quality services to meet the needs of our community.
+          Our team ensures efficient and reliable assistance in various areas to serve the public with professionalism and excellence.
+      </p>
+    </div>
+  
     <!-- Horizontal Scrolling Container -->
     <div class="services-scroll-container">
       <div class="services-scroll">

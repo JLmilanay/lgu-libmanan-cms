@@ -3,30 +3,17 @@ require_once 'config.php'; // Database connection
 
 $admin_mode = (isset($_GET['admin']) && $_GET['admin'] === '1');
 
-// Helper function to extract YouTube video ID
-function getYoutubeId($url) {
-    $youtube_id = "";
-    if (strpos($url, 'youtu.be') !== false) {
-        $parts = parse_url($url);
-        $youtube_id = ltrim($parts['path'], '/');
-    } elseif (strpos($url, 'youtube.com') !== false) {
-        $parts = parse_url($url);
-        if (isset($parts['query'])) {
-            parse_str($parts['query'], $query);
-            if (isset($query['v'])) {
-                $youtube_id = $query['v'];
-            }
-        }
-    }
-    return $youtube_id;
-}
+// Assuming the office ID is passed as a GET parameter
+$office_id = isset($_GET['office_id']) ? intval($_GET['office_id']) : 0;
 
-// Fetch news from the database
+// Fetch news from the database based on office ID
 $news_list = [];
 try {
     $stmt = $conn->prepare("SELECT id, title, created_at, content, video_url, image_path, video_file_path 
                             FROM news_content 
+                            WHERE office_id = ? 
                             ORDER BY created_at DESC");
+    $stmt->bind_param("i", $office_id); // Bind the office ID parameter
     $stmt->execute();
     $result = $stmt->get_result();
     $news_list = $result->fetch_all(MYSQLI_ASSOC);
@@ -34,28 +21,31 @@ try {
 } catch (mysqli_sql_exception $e) {
     die("Error fetching news: " . $e->getMessage());
 }
+
+// Function to extract YouTube video ID from a URL
+function getYoutubeId($url) {
+    $pattern = '/(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/';
+    preg_match($pattern, $url, $matches);
+    return isset($matches[1]) ? $matches[1] : null;
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <!-- Ensure proper scaling on mobile devices -->
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>News Section</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
   <style>
-    .container{
-      padding-top:8%;
+    .container {
+      padding-top: 8%;
     }
-    /* Updated z-index for modal and backdrop */
     .modal-backdrop { 
       z-index: 1190 !important; 
     }
     .modal { 
       z-index: 1200 !important; 
     }
-    
-    /* Section header styling */
     .section-header {
       text-align: center;
       margin-bottom: 30px;
@@ -68,8 +58,6 @@ try {
       font-size: 1.1rem;
       color: #555;
     }
-    
-    /* Horizontal slider container for news cards */
     .news-slider {
       display: flex;
       flex-wrap: nowrap;
@@ -96,8 +84,6 @@ try {
         width: calc(33.33% - 10px);
       }
     }
-    
-    /* Card preview styling */
     .card-video-preview {
       width: 100%;
       height: 200px;
@@ -110,8 +96,6 @@ try {
       height: 200px;
       object-fit: cover;
     }
-    
-    /* Fullscreen viewer styling (for images) */
     .fullscreen-media {
       position: fixed;
       top: 0;
@@ -138,8 +122,6 @@ try {
       right: 20px;
       z-index: 2100;
     }
-    
-    /* Card hover effect */
     .news-item {
       cursor: pointer;
       transition: transform 0.2s, box-shadow 0.2s;
@@ -148,8 +130,6 @@ try {
       transform: scale(1.03);
       box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
     }
-    
-    /* Modal media styling */
     #modalImage {
       width: 100%;
       height: 400px;
@@ -172,13 +152,22 @@ try {
 </head>
 <body class="bg-light">
   <div class="container my-4">
-    <!-- Section Header -->
-    <div class="section-header">
-      <h2 class="text-primary">Latest News</h2>
-      <p class="lead">Stay informed with the latest updates and breaking news from our team.</p>
+    <div class="text-center mt-4">
+      <h4>
+        <?php 
+          if (!empty($section['title'])) {
+              echo htmlspecialchars($section['title'], ENT_QUOTES, 'UTF-8');
+          } else {
+              echo '<strong style="font-size: 2em; font-weight: bold;"> LATEST NEWS </strong>';
+          }
+        ?>
+      </h4>
+      <hr>
+      <p class="lead">
+          Stay informed with the latest updates and breaking news from our team.
+      </p>
     </div>
     
-    <!-- Horizontal News Slider -->
     <div class="news-slider">
       <?php foreach ($news_list as $news): ?>
       <div class="news-card-wrapper">
@@ -222,7 +211,6 @@ try {
     </div>
   </div>
 
-  <!-- News Modal -->
   <div class="modal fade" id="newsModal" tabindex="-1" aria-labelledby="newsModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl">
       <div class="modal-content">
@@ -234,7 +222,6 @@ try {
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          <!-- Only one media element will be shown at a time -->
           <img id="modalImage" src="" alt="News media">
           <video id="modalVideo" controls style="display: none;"></video>
           <iframe id="modalEmbed" allowfullscreen style="display: none;"></iframe>
@@ -244,7 +231,6 @@ try {
     </div>
   </div>
 
-  <!-- Fullscreen Media Viewer (only used for images) -->
   <div id="fullscreenViewer" class="fullscreen-media">
     <button type="button" class="btn-close btn-close-white" aria-label="Close" onclick="hideFullscreenMedia()"></button>
     <img id="fullscreenImg" src="" alt="Fullscreen View" style="display: none;">
@@ -252,13 +238,11 @@ try {
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <script>
-    // Initialize the news modal
     let newsModal;
     document.addEventListener("DOMContentLoaded", function() {
       const newsModalEl = document.getElementById('newsModal');
       newsModal = new bootstrap.Modal(newsModalEl);
 
-      // Ensure modal close button works
       document.querySelector('#newsModal .btn-close').addEventListener('click', function(){
           newsModal.hide();
       });
@@ -280,7 +264,6 @@ try {
           const modalVideo = document.getElementById('modalVideo');
           const modalEmbed = document.getElementById('modalEmbed');
           
-          // Reset all media elements
           modalImage.style.display = 'none';
           modalVideo.style.display = 'none';
           modalEmbed.style.display = 'none';
@@ -289,14 +272,10 @@ try {
           modalVideo.src = '';
           modalEmbed.src = '';
           
-          // Priority:
-          // 1. If a local video file is provided, use the <video> element.
           if (videoFile && videoFile.trim() !== "") {
             modalVideo.src = videoFile;
             modalVideo.style.display = 'block';
-          }
-          // 2. Otherwise, if an external video URL is provided, process it for embedding.
-          else if (videoURL && videoURL.trim() !== "") {
+          } else if (videoURL && videoURL.trim() !== "") {
             let processedURL = videoURL;
             if (videoURL.indexOf("youtu.be") !== -1) {
               let parts = videoURL.split("youtu.be/");
@@ -315,9 +294,7 @@ try {
             }
             modalEmbed.src = processedURL;
             modalEmbed.style.display = 'block';
-          }
-          // 3. Otherwise, if an image is provided, show the image.
-          else if (image && image.trim() !== "") {
+          } else if (image && image.trim() !== "") {
             modalImage.src = image;
             modalImage.style.display = 'block';
           }
@@ -336,7 +313,6 @@ try {
       });
     });
     
-    // Only images use the custom fullscreen viewer.
     function hideFullscreenMedia() {
       const viewer = document.getElementById("fullscreenViewer");
       viewer.style.display = "none";
@@ -351,7 +327,6 @@ try {
       viewer.style.display = "flex";
     }
     
-    // Attach fullscreen event listener only for images.
     document.getElementById('modalImage').addEventListener('click', function() {
       showFullscreenImage(this);
     });

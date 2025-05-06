@@ -613,9 +613,13 @@ $currentProfilePhoto = $profilePhoto ? $profilePhoto : 'ASSETS/default-profile.p
     <a class="nav-link" href="#recent-activity" aria-label="Recent Activity">
       <i class="bi bi-clock-history"></i> Recent Activity
     </a>
-    <a class="nav-link" href="#data-visualization" aria-label="Data Visualization">
+    <a class="nav-link" href="conversation.php" aria-label="Data Visualization">
       <i class="bi bi-bar-chart"></i> Data Visualization
     </a>
+    <a class="nav-link" href="message.php" aria-label="Chat">
+    <i class="bi bi-chat-dots"></i> Chat
+</a>
+
   </nav>
 
   <hr>

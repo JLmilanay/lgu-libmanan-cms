@@ -84,6 +84,7 @@ while ($row = $doc_result->fetch_assoc()) {
             display: flex;
             flex-wrap: wrap;
             gap: 15px;
+            justify-content: center;
         }
         .hidden {
             display: none !important;
@@ -91,15 +92,22 @@ while ($row = $doc_result->fetch_assoc()) {
     </style>
 </head>
 <body class="bg-light">
-
 <div class="container mt-5">
-    <div class="card shadow-lg border-0 p-4">
-        <h3 class="text-center">
-            <?php echo $section_id ? htmlspecialchars($section['name']) : 'All Documents'; ?>
-        </h3>
-        <p class="text-center text-muted">
+    <div class="text-center mt-4">
+      <h4>
+        <?php 
+          if (!empty($section['title'])) {
+              echo htmlspecialchars($section['title'], ENT_QUOTES, 'UTF-8');
+          } else {
+              echo '<strong style="font-size: 2em; font-weight: bold;"> DOCUMENTS </strong>';
+          }
+        ?>
+      </h4>
+      <hr>
+      <p class="lead">
             Browse and download important documents from this section.
-        </p>
+      </p>
+    </div>
         
         <div class="card-body">
             <!-- Search Bar -->

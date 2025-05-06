@@ -230,7 +230,7 @@ if ($officeId) {
       --video-height: 90vh;
       --primary-color: #3498db;
       --secondary-color: #2c3e50;
-      --accent-color: #e74c3c;
+      --accent-color:rgb(255, 255, 255);
       --light-color: #ecf0f1;
       --dark-color: #2c3e50;
       --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -473,8 +473,10 @@ if ($officeId) {
     .video-container {
       width: var(--video-width);
       height: var(--video-height);
-      max-width: 1200px;
-      max-height: 675px;
+      padding-top: 8%;
+      max-width: 70vw;
+      max-height: 700px;
+      display: flex;
       position: relative;
     }
     
@@ -483,23 +485,24 @@ if ($officeId) {
       width: 100%;
       height: 100%;
       border: none;
-      border-radius: 12px;
+      border-radius: 5px;
       box-shadow: 0 0 30px rgba(0,0,0,0.6);
     }
     
     .image-container {
-      max-width: 90vw;
-      max-height: 90vh;
+      max-width: 60vw;
+      max-height: 150px;
       display: flex;
       justify-content: center;
       align-items: center;
     }
     
     .image-container img {
+      padding-top: 10%;
       max-width: 100%;
       max-height: 100%;
       object-fit: contain;
-      border-radius: 8px;
+      border-radius: 3px;
       box-shadow: 0 0 30px rgba(0,0,0,0.6);
     }
     
@@ -627,6 +630,14 @@ if ($officeId) {
         gap: 15px;
         padding: 0 15px;
       }
+
+      .image-container {
+        max-width: 90vw;
+        max-height: 150px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
       
       .close-btn {
         top: 20px;
@@ -671,10 +682,21 @@ if ($officeId) {
   </style>
 </head>
 <body>
-  <div class="gallery-header">
-    <h2><?php echo $officeName; ?> PROGRAMS</h2>
-    <p>Explore the various programs and initiatives under <?php echo $officeName; ?></p>
-  </div>
+<div class="text-center mt-4">
+      <h4>
+        <?php 
+          if (!empty($section['title'])) {
+              echo htmlspecialchars($section['title'], ENT_QUOTES, 'UTF-8');
+          } else {
+              echo '<strong style="font-size: 2em; font-weight: bold;"> GALLERY </strong>';
+          }
+        ?>
+      </h4>
+      <hr>
+      <p class="lead">
+           Explore the various programs and initiatives under <?php echo $officeName; ?>
+      </p>
+    </div>
 
   <?php if (!empty($galleryItems)): ?>
     <div class="filter-controls">
